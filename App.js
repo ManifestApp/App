@@ -10,6 +10,7 @@ import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 import {Provider} from "react-redux"
 import {PRIMARY, DARKER} from "./app/utils/colors";
+import {ProtestView} from "./app/screens/ProtestView";
 
 console.log(i18n.t);
 const AppNavigator = createStackNavigator({
@@ -24,6 +25,9 @@ const AppNavigator = createStackNavigator({
             navigationOptions: function () {
                 return {title: i18n.t('protests')};
             }
+        },
+        ProtestView: {
+            screen: ProtestView
         }
         // Tutorial: {
         //     screen: Tutorial,

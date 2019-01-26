@@ -6,8 +6,17 @@ import Spinner from "../../components/spinner";
 import {connect} from "react-redux";
 import {Image, Text, View} from "react-native";
 
+import {addItem} from "../../utils/headers";
+
+
+
 class ProtestMap extends React.Component {
     state = {selected: undefined};
+
+
+    static navigationOptions = (navigation) => ({
+        headerRight: addItem(navigation, () => navigation.navigation.push("ProtestView")),
+    });
 
     componentDidMount() {
         this.props.searchProtest()

@@ -32,6 +32,8 @@ target 'Manifestapp' do
   pod 'Firebase/Database'
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
   pod 'RNLanguages', :path => '../node_modules/react-native-languages'
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
 
 
   # react-native-maps dependencies

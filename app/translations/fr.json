@@ -1,4 +1,10 @@
 {
   "protests": "Manifestations",
-  "error_get_protests": "Une erreur est survenue. Merci de réessayer plus tard."
+  "error_get_protests": "Une erreur est survenue. Merci de réessayer plus tard.",
+  "protest_create": "Créer une manifestation",
+  "protest_title": "Titre de la manifestation",
+  "protest_description": "Description de la manifestation",
+  "protest_image": "Image de ralliement de la manifestation",
+  "protest_starting_point": "Point de départ de la manifestation",
+  "protest_starting_time": "Heure de début de la manifestation"
 }
