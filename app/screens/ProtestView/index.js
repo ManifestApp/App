@@ -2,13 +2,12 @@ import React from "react";
 import {iconColor, styles} from "./styles";
 import {TextInput, TouchableOpacity, View} from "react-native";
 
-import i18n from '../../utils/languages'
+import {i18n, moment} from '../../utils/languages'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {PRIMARY} from "../../utils/colors";
 
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import moment from "moment";
 
 
 export class ProtestView extends React.Component {
@@ -131,11 +130,13 @@ export class ProtestView extends React.Component {
                     isVisible={this.state.isDatePickerVisible}
                     onConfirm={this._handleDatePicked}
                     onCancel={this._hideDatePicker}
+                    date={this.state.starting_time}
                 />
                 <DateTimePicker
                     isVisible={this.state.isTimePickerVisible}
                     onConfirm={this._handleTimePicked}
                     onCancel={this._hideTimePicker}
+                    date={this.state.starting_time}
                     mode='time'
                 />
 

@@ -3,7 +3,7 @@ import {StatusBar, StyleSheet, View} from 'react-native';
 import {createAppContainer, createStackNavigator} from "react-navigation";
 import HomeScreen from "./app/screens/Home";
 import ProtestMap from "./app/screens/ProtestMap";
-import i18n from './app/utils/languages'
+import {i18n} from './app/utils/languages'
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import protests from "./app/redux/explore_protest"
 import thunk from 'redux-thunk';
