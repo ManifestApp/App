@@ -6,5 +6,6 @@
   "protest_description": "Description de la manifestation",
   "protest_image": "Image de ralliement de la manifestation",
   "protest_starting_point": "Point de départ de la manifestation",
+  "protest_starting_day": "Date de début de la manifestation",
   "protest_starting_time": "Heure de début de la manifestation"
 }
