@@ -19,6 +19,14 @@ export const styles = StyleSheet.create({
     textInputIcon: {
         marginRight: 10
     },
+    placePickerModalContainer: {
+        flex: 1,
+        justifyContent: "center",
+    },
+    placePicker:{
+        flex: .4,
+        backgroundColor: 'white'
+    }
 });
 
 export const iconColor = 'grey';

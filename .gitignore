@@ -56,3 +56,4 @@ buck-out/
 *.jsbundle
 
 ios/Pods/
+app/utils/api_keys\.js

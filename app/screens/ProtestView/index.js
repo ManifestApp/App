@@ -5,10 +5,15 @@ import {TextInput, TouchableOpacity, View} from "react-native";
 import {i18n, moment} from '../../utils/languages'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+
+
 import {PRIMARY} from "../../utils/colors";
 
 import DateTimePicker from 'react-native-modal-datetime-picker';
-
+import {GOOGLE_PLACE_API_KEY} from "../../utils/api_keys";
+import Modal from "react-native-modal";
+import _ from "lodash"
 
 export class ProtestView extends React.Component {
 
@@ -20,6 +25,8 @@ export class ProtestView extends React.Component {
         starting_time: new Date(),
         isDatePickerVisible: false,
         isTimePickerVisible: false,
+        isPlacePickerVisible: false,
+        place: null
     };
 
     static navigationOptions = (navigation) => ({
@@ -30,10 +37,20 @@ export class ProtestView extends React.Component {
 
     _hideDatePicker = () => this.setState({isDatePickerVisible: false});
 
+    _showPlacePicker = () => this.setState({isPlacePickerVisible: true});
+
+    _hidePlacePicker = () => this.setState({isPlacePickerVisible: false});
+
     _handleDatePicked = (date) => {
         console.log('A date has been picked: ', date);
         this.setState({starting_time: date});
         this._hideDatePicker();
+    };
+
+    _handlePlacePicked = (place) => {
+        console.log('A place has been picked: ', JSON.stringify(place));
+        this.setState({starting_position: [place.lat, place.lng]});
+        this._hidePlacePicker();
     };
 
     _showTimePicker = () => this.setState({isTimePickerVisible: true});
@@ -46,13 +63,18 @@ export class ProtestView extends React.Component {
         this._hideTimePicker();
     };
 
-    renderTime(){
+    renderTime() {
         return moment(this.state.starting_time).format('LT')
     }
 
-    renderDate(){
+    renderDate() {
         return moment(this.state.starting_time).format('LL')
     }
+
+    renderLocation() {
+        return this.state.starting_position.join("; ")
+    }
+
     render() {
         return (
             <View style={styles.main}>
@@ -117,13 +139,16 @@ export class ProtestView extends React.Component {
                 </View>
                 <View style={styles.textInputContainer}>
                     <Icon name='map-marker' size={20} color={iconColor} style={styles.textInputIcon}/>
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder={i18n.t('protest_starting_point')}
-                        onChangeText={(starting_position) => this.setState({starting_position})}
-                        value={this.state.starting_position}
-                        underlineColorAndroid={PRIMARY}
-                    />
+                    <TouchableOpacity onPress={() => this._showPlacePicker()}>
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder={i18n.t('protest_starting_point')}
+                            onChangeText={(starting_position) => this.setState({starting_position})}
+                            value={this.renderLocation()}
+                            disabled={true}
+                            pointerEvents="none"
+                        />
+                    </TouchableOpacity>
                 </View>
 
                 <DateTimePicker
@@ -139,6 +164,71 @@ export class ProtestView extends React.Component {
                     date={this.state.starting_time}
                     mode='time'
                 />
+
+
+                <View>
+                    <Modal isVisible={this.state.isPlacePickerVisible} style={{ flex: 1 }}
+                    >
+                        <View style={styles.placePickerModalContainer}>
+                            <View style={styles.placePicker}>
+                                <GooglePlacesAutocomplete
+                                    placeholder={i18n.t("search_location")}
+                                    minLength={2} // minimum length of text to search
+                                    autoFocus={false}
+                                    returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+                                    listViewDisplayed='auto'    // true/false/undefined
+                                    fetchDetails={true}
+                                    renderDescription={row => _.truncate(row.description,  {
+                                        omission: '...',
+                                        length: 45
+                                    })} // custom description render
+                                    onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                                        this._handlePlacePicked(details.geometry.location)
+                                    }}
+
+                                    getDefaultValue={() => ''}
+
+                                    query={{
+                                        // available options: https://developers.google.com/places/web-service/autocomplete
+                                        key: GOOGLE_PLACE_API_KEY,
+                                        language: 'fr', // language of the results
+                                    }}
+
+                                    styles={{
+                                        textInputContainer: {
+                                            width: '100%'
+                                        },
+                                        description: {
+                                            fontWeight: 'bold'
+                                        },
+                                        predefinedPlacesDescription: {
+                                            color: '#1faadb'
+                                        }
+                                    }}
+
+
+
+                                    currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+                                    currentLocationLabel="Current location"
+                                    nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                                    GoogleReverseGeocodingQuery={{
+                                        // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                                    }}
+                                    GooglePlacesSearchQuery={{
+                                        // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                                        rankby: 'distance',
+                                        types: 'food'
+                                    }}
+
+                                    filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                                    predefinedPlaces={[]}
+
+                                    debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+                                />
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
 
             </View>
         )
